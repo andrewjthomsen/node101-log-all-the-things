@@ -10,7 +10,7 @@ app.use((req, res, next) => {
   let time = new Date().toISOString();
   let method = req.method;
   let resource = req.path;
-  let version = `HTTP/$(req.httpVersion)`;
+  let version = `HTTP/${req.httpVersion}`;
   let status = 200;
 
   let data =
@@ -23,6 +23,7 @@ app.use((req, res, next) => {
     resource +
     "," +
     version +
+    "," +
     status +
     "\n";
   console.log(data);
@@ -36,7 +37,7 @@ app.use((req, res, next) => {
 
   app.get("/", (req, res) => {
     // write your code to respond "ok" here
-    res.send("ok");
+    res.status(200).send("ok");
   });
 
   app.get("/logs", (req, res) => {
