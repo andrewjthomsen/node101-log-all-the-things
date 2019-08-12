@@ -2,6 +2,8 @@ const express = require("express");
 const fs = require("fs");
 const app = express();
 
+starterData = [];
+
 app.use((req, res, next) => {
   // write your logging code here
   let agent = req.headers["user-agent"].replace(/,/, "");
@@ -11,7 +13,7 @@ app.use((req, res, next) => {
   let version = `HTTP/$(req.httpVersion)`;
   let status = 200;
 
-  let dataInfo =
+  let data =
     agent +
     "," +
     time +
@@ -23,10 +25,10 @@ app.use((req, res, next) => {
     version +
     status +
     "\n";
-  console.log(dataInfo);
+  console.log(data);
 
   // REsponsible for writing data to csv file
-  fs.appendFile("./log.csv", dataInfo, "utf8", error => {
+  fs.appendFile("./log.csv", data, "utf8", error => {
     if (error) throw error;
     // Otherwise, if no error
     next();
@@ -39,14 +41,14 @@ app.use((req, res, next) => {
 
   app.get("/logs", (req, res) => {
     // write your code to return a json object containing the log data here
-    fs.readFile("./log.csv", "utf8", (error, dataInfo) => {
-      var dataObject = "{";
-      var lines = data.split("\n");
-      var items = undefined;
+    fs.readFile("./log.csv", "utf8", (error, data) => {
+      const dataObj = "[";
+      const lines = data.split("\n");
+      const items = undefined;
       for (var i = 1; i < lines.length; i++) {
         if (lines[i].length > 2) {
           items = lines[i].split(",");
-          object +=
+          dataObj +=
             "{" +
             '"Agent":"' +
             items[0] +
@@ -73,8 +75,8 @@ app.use((req, res, next) => {
           }
         }
       }
-      object += "}";
-      res.json(JSON.parse(object));
+      dataObj += "]";
+      res.json(JSON.parse(dataObj));
     });
   });
 });
